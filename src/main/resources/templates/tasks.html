@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management System</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #444;
+        }
+
+        table {
+            margin-top: 20px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+            background-color: #ffffff;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f0f0f0; /* светло-серый фон для заголовков */
+        }
+
+        td {
+            background-color: #fafafa; /* чуть более светлый фон для ячеек */
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f9f9f9; /* чередование цветов строк */
+        }
+
+        p {
+            color: #777; /* светлый текст для сообщения о пустых задачах */
+        }
+
+        a {
+            text-decoration: none;
+            color: #555; /* серый цвет для ссылки */
+            font-size: 16px;
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #ccc; /* серый фон для кнопки */
+        }
+
+        a:hover {
+            background-color: #999; /* темнее серый при наведении */
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div align="center">
+    <h1>Your Tasks</h1>
+    <table border="1" th:if="${tasks != null}">
+        <thead>
+        <tr>
+            <th>Task ID</th>
+            <th>Task Title</th>
+            <th>Task Description</th>
+            <th>Due Date</th>
+            <th>Task Status</th>
+            <th>Priority</th>
+            <th>User</th>
+            <th>Category</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.id}">Default ID</td>
+            <td th:text="${task.title}">Default Title</td>
+            <td th:text="${task.description}">Default Description</td>
+            <td th:text="${task.dueDate}">Default Due Date</td>
+            <td th:text="${task.status}">Default Status</td>
+            <td th:text="${task.priority}">Default Priority</td>
+            <td th:text="${task.user.name}">Default User</td>
+            <td th:text="${task.category.name}">Default Category</td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(tasks)}">No tasks assigned to you.</p>
+    <a href="/main">Back to Profile</a>
+</div>
+</body>
+</html>
+
+
