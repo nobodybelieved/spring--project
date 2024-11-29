@@ -14,13 +14,12 @@
 
         h1 {
             color: #444;
+            text-align: center;
         }
 
         table {
-            margin-top: 20px;
+            margin: 20px auto;
             width: 80%;
-            margin-left: auto;
-            margin-right: auto;
             border-collapse: collapse;
             background-color: #ffffff;
         }
@@ -32,71 +31,155 @@
         }
 
         th {
-            background-color: #f0f0f0; /* светло-серый фон для заголовков */
+            background-color: #f0f0f0;
         }
 
-        td {
-            background-color: #fafafa; /* чуть более светлый фон для ячеек */
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
 
-        tr:nth-child(even) td {
-            background-color: #f9f9f9; /* чередование цветов строк */
-        }
-
-        p {
-            color: #777; /* светлый текст для сообщения о пустых задачах */
-        }
-
-        a {
-            text-decoration: none;
-            color: #555; /* серый цвет для ссылки */
-            font-size: 16px;
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            border-radius: 5px;
-            background-color: #ccc; /* серый фон для кнопки */
-        }
-
-        a:hover {
-            background-color: #999; /* темнее серый при наведении */
+        .btn {
+            background-color: #007bff;
             color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-gray {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-gray:hover {
+            background-color: #5a6268;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-decoration: none;
+            background-color: #f0f0f0;
+        }
+
+        .pagination a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .pagination .current-page {
+            background-color: #007bff;
+            color: white;
+            pointer-events: none;
+        }
+
+        form {
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            width: 300px; /* Увеличено шире */
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        select, button {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-<div align="center">
+<div>
     <h1>Your Tasks</h1>
-    <table border="1" th:if="${tasks != null}">
+
+    <!-- Форма фильтрации -->
+    <form method="get" action="/tasks">
+        <input type="text" name="title" placeholder="Search by title" th:value="${title}">
+        <select name="categoryId">
+            <option value="" th:selected="${categoryId == null}">All Categories</option>
+            <option value="1" th:selected="${categoryId == 1}">Easy</option>
+            <option value="2" th:selected="${categoryId == 2}">Hard</option>
+        </select>
+        <button type="submit" class="btn">Search</button>
+    </form>
+
+    <a href="/tasks/new" class="btn">New Task</a>
+
+    <table th:if="${taskPage != null}">
         <thead>
         <tr>
             <th>Task ID</th>
-            <th>Task Title</th>
-            <th>Task Description</th>
+            <th>Title</th>
+            <th>Description</th>
             <th>Due Date</th>
-            <th>Task Status</th>
+            <th>Status</th>
             <th>Priority</th>
-            <th>User</th>
             <th>Category</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="task : ${tasks}">
+        <tr th:each="task : ${taskPage.content}">
             <td th:text="${task.id}">Default ID</td>
             <td th:text="${task.title}">Default Title</td>
             <td th:text="${task.description}">Default Description</td>
             <td th:text="${task.dueDate}">Default Due Date</td>
             <td th:text="${task.status}">Default Status</td>
             <td th:text="${task.priority}">Default Priority</td>
-            <td th:text="${task.user.name}">Default User</td>
             <td th:text="${task.category.name}">Default Category</td>
         </tr>
         </tbody>
     </table>
-    <p th:if="${#lists.isEmpty(tasks)}">No tasks assigned to you.</p>
-    <a href="/main">Back to Profile</a>
+
+    <p th:if="${#lists.isEmpty(taskPage.content)}">No tasks found.</p>
+
+    <!-- Пагинация -->
+    <div class="pagination" th:if="${totalPages > 1}">
+        <a th:if="${currentPage > 0}"
+           th:href="@{/tasks(page=${currentPage - 1}, size=${size}, title=${title}, categoryId=${categoryId})}">
+            Previous
+        </a>
+
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/tasks(page=${i}, size=${size}, title=${title}, categoryId=${categoryId})}"
+               th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? 'current-page' : ''"></a>
+        </span>
+
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/tasks(page=${currentPage + 1}, size=${size}, title=${title}, categoryId=${categoryId})}">
+            Next
+        </a>
+    </div>
+
+    <a href="/main" class="btn-gray">Back to Profile</a>
 </div>
 </body>
 </html>
-
-

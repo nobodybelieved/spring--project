@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/registration")
 public class UserRegistrationController {
 
-    private UserService userService;
+    private final UserService userService;
     public UserRegistrationController(UserService userService) {
         super();
         this.userService = userService;

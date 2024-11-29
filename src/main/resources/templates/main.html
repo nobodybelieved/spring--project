@@ -5,102 +5,98 @@
     <title>Home</title>
     <style>
         body {
-            background-color: #f0f0f0;
-            color: #333;
+            background-color: #f4f4f4;
+            color: #f0f0f0;
             font-family: Arial, sans-serif;
-            text-align: center;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         h1 {
-            color: #555;
+            color: #f0f0f0;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 5px #000;
         }
 
-        button {
-            background-color: #ccc;
+        .main-container {
+            text-align: center;
+        }
+
+        .main-btn {
+            background-color: #4a4a4a;
+            color: #ffffff;
             border: none;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: bold;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 10px;
+            margin: 15px;
+            transition: all 0.3s ease;
+            width: 300px;
         }
 
-        button:hover {
-            background-color: #999;
+        .main-btn:hover {
+            background-color: #6a6a6a;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
-        a {
-            text-decoration: none;
+        .logout-btn {
+            background-color: #d9534f; /* Красная кнопка для выхода */
         }
 
-        .profile-info {
-            margin-top: 20px;
-        }
-
-        .profile-info p {
-            font-size: 18px;
-        }
-
-        .logout-button {
-            background-color: #ff6347;
-        }
-
-        .tasks-button {
-            background-color: #4caf50;
-        }
-
-        .button-container {
-            margin-top: 30px;
-        }
-
-        .button-container button {
-            margin: 10px;
+        .logout-btn:hover {
+            background-color: #c9302c;
         }
     </style>
 </head>
 <body>
-<h1>Welcome, <span th:text="${user.name}">User</span></h1>
+<div class="main-container">
+    <h1>Welcome, <span th:text="${user.name}">User</span></h1>
 
-<div class="profile-info">
-    <p>Email: <span th:text="${user.email}">email@example.com</span></p>
-    <p>Password: <span th:text="'********'"></span></p> <!-- Display stars instead of the password -->
-</div>
-
-<div class="button-container">
-    <!-- Logout Button -->
-    <a href="/logout">
-        <button class="logout-button">Logout</button>
-    </a>
-
-    <!-- Tasks Button -->
-    <a href="/tasks">
-        <button class="tasks-button">Your Tasks</button>
-    </a>
+    <button class="main-btn" onclick="redirectTo('/profile')">My Profile</button>
+    <button class="main-btn" onclick="redirectTo('/tasks')">My Tasks</button>
+    <button class="main-btn logout-btn" onclick="confirmLogout()">Log Out</button>
 </div>
 
 <script>
-    var idleTime = 0;
-    var idleLimit = 20000;
-
-    function resetIdleTime() {
-        idleTime = 0;
+    function redirectTo(url) {
+        window.location.href = url; // Перенаправление на указанную страницу
     }
 
-    function checkIdleTime() {
-        idleTime += 1000;
-        if (idleTime >= idleLimit) {
-            window.location.href = "/login";
+    function confirmLogout() {
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = '/logout'; // Перенаправление на страницу выхода
         }
     }
 
-    window.onload = function() {
+    // Автоматический logout после 30 секунд бездействия
+    var idleTime = 0; // Время бездействия (в миллисекундах)
+    var idleLimit = 30000; // Лимит бездействия (30 секунд)
+
+    function resetIdleTime() {
+        idleTime = 0; // Сброс времени бездействия
+    }
+
+    function checkIdleTime() {
+        idleTime += 1000; // Увеличиваем таймер каждые 1 секунду
+        if (idleTime >= idleLimit) {
+            alert("You were logged out due to inactivity.");
+            window.location.href = "/login"; // Перенаправление на страницу логина
+        }
+    }
+
+    window.onload = function () {
         setInterval(checkIdleTime, 1000);
 
-        window.onmousemove = resetIdleTime; // Движение мыши
-        window.onkeydown = resetIdleTime;   // Нажатие клавиш
+        window.onmousemove = resetIdleTime;
+        window.onkeydown = resetIdleTime;
+        window.onclick = resetIdleTime;
     };
 </script>
-
 </body>
 </html>
 
