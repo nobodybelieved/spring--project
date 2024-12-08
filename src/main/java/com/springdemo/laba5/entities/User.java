@@ -25,6 +25,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String imageLink;
     @NotNull
     @Min(18)
     private int age;
@@ -37,12 +38,11 @@ public class User {
     private List<Task> tasks = new ArrayList<>();
 
     public User(String name, int age, String email, String password, Date accountCreationDate) {
-        this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;
         this.password = password;
-        this.accountCreationDate = accountCreationDate;
+        this.accountCreationDate = accountCreationDate; 
     }
     public void addTask(Task task) {
         tasks.add(task);

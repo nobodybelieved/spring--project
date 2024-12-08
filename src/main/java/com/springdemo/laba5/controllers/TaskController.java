@@ -3,30 +3,24 @@ package com.springdemo.laba5.controllers;
 import java.util.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import com.springdemo.laba5.entities.Category;
-import com.springdemo.laba5.repositories.CategoryRepository;
+
 import com.springdemo.laba5.services.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.springdemo.laba5.entities.Task;
 import com.springdemo.laba5.entities.User;
 import com.springdemo.laba5.services.TaskService;
-import com.springdemo.laba5.services.UserService;
+
 import com.springdemo.laba5.services.UserServiceIMPL;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.*;
 import java.security.Principal;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 
 @Controller
@@ -59,21 +53,7 @@ public class TaskController {
         }
     }
 
-//    @GetMapping("/tasks")
-//    public String showTasksPage(Model model, Principal principal) {
-//        try {
-//            String email = principal.getName();
-//            User user = userService.findByEmail(email);
-//
-//            List<Task> tasks = taskService.findTaskByUserId(user.getId());
-//            model.addAttribute("tasks", tasks);
-//
-//            return "tasks";
-//        } catch (Exception e) {
-//            System.err.println("Error retrieving tasks: " + e.getMessage());
-//            return "error";
-//        }
-//    }
+
 
 
     @GetMapping("/tasks")
@@ -121,29 +101,6 @@ public class TaskController {
 
 
 
-//    @GetMapping("/tasks")
-//    public String showTasksPage(@RequestParam(defaultValue = "0") int page,
-//                                @RequestParam(defaultValue = "5") int size,
-//                                Model model, Principal principal) {
-//        try {
-//            String email = principal.getName();
-//            User user = userService.findByEmail(email);
-//            Pageable pageable = PageRequest.of(page, size);
-//            Page<Task> taskPage = taskService.findTaskByUserId(user.getId(), pageable);
-//
-//            model.addAttribute("taskPage", taskPage);
-//            model.addAttribute("currentPage", page);
-//            model.addAttribute("totalPages", taskPage.getTotalPages());
-//            model.addAttribute("totalItems", taskPage.getTotalElements());
-//
-//            return "tasks";
-//        } catch (Exception e) {
-//            System.err.println("Error retrieving tasks: " + e.getMessage());
-//            return "error";
-//        }
-//    }
-
-
 
 
 
@@ -186,11 +143,22 @@ public class TaskController {
     }
 
 
-
-
     @GetMapping("/logout")
     public String logout() {
         return "redirect:/login";
+    }
+
+
+
+    @GetMapping("/tasks/delete/{taskId}")
+    public String deleteTask(@PathVariable Long taskId) {
+        try {
+            taskService.deleteById(taskId);
+            return "redirect:/tasks";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error";
+        }
     }
 
 }

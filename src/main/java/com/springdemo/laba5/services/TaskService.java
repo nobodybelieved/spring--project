@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -22,61 +23,17 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public List<Task> findTasksByUser(User user) {
-        return taskRepository.findByUser(user);
-    }
-
-    public List<Task> findAll() {
-        return taskRepository.findAll();
-    }
-    public List<Task> findTaskByUserId(Long id) {
-        return taskRepository.findByUserId(id);
-
-    }
     public Page<Task> findTaskByUserId(Long userId, Pageable pageable) {
         return taskRepository.findByUserId(userId, pageable);
-    }
-
-    public List<Task> getAllTasks() {
-        User currentUser = getCurrentUser();
-        return taskRepository.findByUser(currentUser);
-    }
-    private User getCurrentUser() {
-        return new User();
     }
 
     public void save(Task task) {
         taskRepository.save(task);
     }
 
-    public Page<Task> getTasksByFilters(String title, String status, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-
-        if (title != null && !title.isEmpty() && status != null && !status.isEmpty()) {
-            return taskRepository.findByTitleContainingAndStatus(title, status, pageRequest);
-        } else if (title != null && !title.isEmpty()) {
-            return taskRepository.findByTitleContaining(title, pageRequest);
-        } else if (status != null && !status.isEmpty()) {
-            return taskRepository.findByStatus(status, pageRequest);
-        } else {
-            return taskRepository.findAll(pageRequest);
-        }
-    }
-
-
-
-
-
-    public Page<Task> findByUserIdAndTitleContainingAndStatus(Long userId, String title, String status, Pageable pageable) {
-        return taskRepository.findByUserIdAndTitleContainingAndStatus(userId, title, status, pageable);
-    }
 
     public Page<Task> findByUserIdAndTitleContaining(Long userId, String title, Pageable pageable) {
         return taskRepository.findByUserIdAndTitleContaining(userId, title, pageable);
-    }
-
-    public Page<Task> findByUserIdAndStatus(Long userId, String status, Pageable pageable) {
-        return taskRepository.findByUserIdAndStatus(userId, status, pageable);
     }
 
     public Page<Task> findByUserIdAndTitleContainingAndCategoryId(Long userId, String title, Long categoryId, Pageable pageable) {
@@ -86,18 +43,12 @@ public class TaskService {
     public Page<Task> findByUserIdAndCategoryId(Long userId, Long categoryId, Pageable pageable) {
         return taskRepository.findByUserIdAndCategoryId(userId, categoryId, pageable);
     }
-
-    public Page<Task> findFilteredTasks(Long userId, String title, Long categoryId, Pageable pageable) {
-        if (title != null && categoryId != null) {
-            return taskRepository.findByUserIdAndTitleContainingAndCategoryId(userId, title, categoryId, pageable);
-        } else if (title != null) {
-            return taskRepository.findByUserIdAndTitleContaining(userId, title, pageable);
-        } else if (categoryId != null) {
-            return taskRepository.findByUserIdAndCategoryId(userId, categoryId, pageable);
+    public void deleteById(Long taskId) {
+        Optional<Task> task = taskRepository.findById(taskId);
+        if (task.isPresent()) {
+            taskRepository.delete(task.get());
         } else {
-            return taskRepository.findByUserId(userId, pageable);
+            throw new RuntimeException("Task not found with id: " + taskId);
         }
     }
-
-
 }

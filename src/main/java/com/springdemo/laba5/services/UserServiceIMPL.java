@@ -40,6 +40,10 @@ public class UserServiceIMPL implements UserService {
     return userRepository.save(user);
     }
 
+    public User save_image(User user) {
+        return userRepository.save(user);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -54,14 +58,13 @@ public class UserServiceIMPL implements UserService {
         return userRepository.findByEmail(email);
     }
 
-    public List<User> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        users.forEach(user -> System.out.println("User: " + user.getName() + ", Email: " + user.getEmail() ));
-        return users;
-    }
 
-    public User findByName(String name) {
-        return userRepository.findByName(name);
+    public void updatePassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        }
     }
 
 }

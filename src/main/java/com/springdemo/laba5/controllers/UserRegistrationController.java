@@ -1,12 +1,8 @@
 package com.springdemo.laba5.controllers;
 
-import com.springdemo.laba5.entities.User;
 import com.springdemo.laba5.services.UserService;
-import com.springdemo.laba5.services.UserServiceIMPL;
 import com.springdemo.laba5.web.dto.UserRegistrationDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

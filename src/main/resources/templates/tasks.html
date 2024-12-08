@@ -120,7 +120,6 @@
 <div>
     <h1>Your Tasks</h1>
 
-    <!-- Форма фильтрации -->
     <form method="get" action="/tasks">
         <input type="text" name="title" placeholder="Search by title" th:value="${title}">
         <select name="categoryId">
@@ -154,6 +153,10 @@
             <td th:text="${task.status}">Default Status</td>
             <td th:text="${task.priority}">Default Priority</td>
             <td th:text="${task.category.name}">Default Category</td>
+            <!-- Кнопка для удаления -->
+            <td>
+                <a href="/tasks/delete/{task.id}" th:href="@{/tasks/delete/{taskId}(taskId=${task.id})}">Delete</a>
+            </td>
         </tr>
         </tbody>
     </table>

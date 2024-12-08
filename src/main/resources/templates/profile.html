@@ -38,9 +38,21 @@
             color: #555;
         }
 
-        .back-button {
+        .profile-photo {
+            margin: 20px 0;
+        }
+
+        .profile-photo img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
+
+        .button {
             display: inline-block;
-            margin-top: 40px;
+            margin-top: 20px;
             padding: 12px 25px;
             font-size: 18px;
             color: #fff;
@@ -52,18 +64,39 @@
             transition: background-color 0.3s ease;
         }
 
-        .back-button:hover {
+        .button:hover {
             background-color: #6a6a6a;
+        }
+
+        .upload-button {
+            margin-top: 15px;
+            display: inline-block;
+            font-size: 16px;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 <div class="profile-container">
     <h1>Profile</h1>
+
+    <div class="profile-photo">
+        <img th:src="${user.imageLink != null ? user.imageLink : '/images/default-avatar.png'}" alt="Profile Photo">
+    </div>
     <p><strong>Name:</strong> <span th:text="${user.name}">Username</span></p>
     <p><strong>Email:</strong> <span th:text="${user.email}">Emailuser</span></p>
     <p><strong>Age:</strong> <span th:text="${user.age}">userage</span></p>
-    <a href="/main" class="back-button">Back to Menu</a>
+
+    <form action="#" th:action="@{/profile/uploadImage}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required>
+        <button type="submit" class="upload-button">Upload Photo</button>
+    </form>
+
+    <a href="/main" class="button">Back to Menu</a>
+    <a href="/profile/change-password" class="button" style="background-color: #3b7ddd;">Change Password</a>
+
 </div>
 </body>
 </html>

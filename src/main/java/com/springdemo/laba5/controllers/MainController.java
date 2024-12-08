@@ -1,13 +1,11 @@
 package com.springdemo.laba5.controllers;
 
 import com.springdemo.laba5.entities.User;
-import com.springdemo.laba5.services.UserService;
 import com.springdemo.laba5.services.UserServiceIMPL;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.security.core.Authentication;
+
 
 import java.security.Principal;
 
@@ -25,6 +23,7 @@ public class MainController {
     public String login(){
         return "login";
     }
+
     @GetMapping("/profile")
     public String showProfile(Model model, Principal principal) {
         String email = principal.getName();
@@ -35,4 +34,6 @@ public class MainController {
         model.addAttribute("user", user);
         return "profile";
     }
+
+
 }
